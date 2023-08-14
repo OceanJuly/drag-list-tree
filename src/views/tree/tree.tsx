@@ -1,36 +1,36 @@
 import './tree.less'
-import {useDrag, useDrop} from "react-dnd";
 import {Tree} from "antd";
 import { DownOutlined } from '@ant-design/icons';
 import {treeData} from "./const.ts";
 import TreeItem from "./tree-item.tsx";
+import {useState} from "react";
 
 function ZfTree() {
-
-    const [{ isOver }, drag] = useDrop({
-        accept: 'item',
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-        }),
-    })
-
-    function titleRender(nodeData: any) {
-        console.log(nodeData);
+    const [expandedKeys, setExpandedKeys] = useState(['0-0-0'])
+    function TitleRender(nodeData: any) {
         return (
-            <div ref={drag}>nodeData.title</div>
+            <TreeItem nodeData={nodeData} updateTreeData={updateTreeData}></TreeItem>
         )
     }
 
+    function updateTreeData(tarInfo: any) {
+        console.log(tarInfo);
+    }
+
+    function handleTreeExpand(keys: Array<string>) {
+        setExpandedKeys(keys)
+    }
+
     return (
-        <div className="zf-tree-wrap" ref={drag}>
+        <div className="zf-tree-wrap">
             <Tree
                 showLine
                 blockNode={true}
                 switcherIcon={<DownOutlined />}
-                defaultExpandedKeys={['0-0-0']}
+                expandedKeys={expandedKeys}
+                onExpand={handleTreeExpand}
                 treeData={treeData}
-                titleRender={titleRender}
-                style={{ background: isOver ? '#FFAA00' : '#FFFFFF' }}
+                titleRender={TitleRender}
             />
         </div>
     )

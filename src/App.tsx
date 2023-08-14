@@ -3,7 +3,7 @@ import ZfList from "./views/list/index.tsx";
 import ZfTree from "./views/tree/tree.tsx";
 import {DndProvider} from "react-dnd";
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import Demo from "./views/demo";
+import CustomDragLayer from "./views/custom-drag-layer";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
                   <ZfList></ZfList>
                   <ZfTree></ZfTree>
               </div>
-              {/*<Demo></Demo>*/}
+              {/*<CustomDragLayer></CustomDragLayer>*/}
           </div>
       </DndProvider>
   )

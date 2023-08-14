@@ -7,6 +7,10 @@ function ListItem({tag}: any) {
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
+        end: (item, monitor) => {
+            console.log(item);
+            console.log(monitor);
+        },
     })
 
     return (
