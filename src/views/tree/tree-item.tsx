@@ -1,27 +1,31 @@
-import {DragSourceMonitor, useDrag, useDrop} from "react-dnd";
-import {useRef} from "react";
+import {useDrag, useDrop} from "react-dnd";
+import {useEffect, useRef} from "react";
 
 function TreeItem(props: any) {
     const ref = useRef<HTMLDivElement>(null)
     const nodeData = props.nodeData
     const [{ isDragging }, drag] = useDrag({
         type: 'item',
-        item: nodeData,
+        item: {
+            ...nodeData,
+            dragType: 'node'
+        },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
-        // end: (item, monitor) => {
-        //     console.log(item);
-        //     console.log(monitor.getDropResult());
-        // },
     })
+
+    useEffect(() => {
+        if (isDragging) props.packUpChild(nodeData.id)
+    }, [isDragging])
+
     const [{ isOver }, drop] = useDrop({
         accept: 'item',
         collect: (monitor) => ({
             isOver: monitor.isOver(),
         }),
         drop: (item: any) => {
-            props.updateTreeData(item)
+            props.updateTreeData(item, nodeData)
         },
     })
 
@@ -30,7 +34,11 @@ function TreeItem(props: any) {
             className="tree-item"
             ref={drag(drop(ref)) as any}
             style={{ opacity: isDragging ? 0.5 : 1, background: isOver ? '#2a999d' : '#FFFFFF' }}>
-            {nodeData.title}
+            {
+                nodeData.type === 'String'
+                    ? `${nodeData.name} === ${nodeData.value}`
+                    : nodeData.name
+            }
         </div>
     )
 }

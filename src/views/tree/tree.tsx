@@ -5,16 +5,26 @@ import {treeData} from "./const.ts";
 import TreeItem from "./tree-item.tsx";
 import {useState} from "react";
 
-function ZfTree() {
+function ZfTree(props: any) {
     const [expandedKeys, setExpandedKeys] = useState(['0-0-0'])
+
     function TitleRender(nodeData: any) {
         return (
-            <TreeItem nodeData={nodeData} updateTreeData={updateTreeData}></TreeItem>
+            <TreeItem
+                nodeData={nodeData}
+                updateTreeData={updateTreeData}
+                packUpChild={packUpChild}
+            ></TreeItem>
         )
     }
 
-    function updateTreeData(tarInfo: any) {
-        console.log(tarInfo);
+    function updateTreeData(tar: any, source: any) {
+        console.log(tar);
+        console.log(source);
+    }
+
+    function packUpChild(key: string) {
+        setExpandedKeys(expandedKeys.filter((keyStr: string) => keyStr !== key))
     }
 
     function handleTreeExpand(keys: Array<string>) {
@@ -30,6 +40,9 @@ function ZfTree() {
                 expandedKeys={expandedKeys}
                 onExpand={handleTreeExpand}
                 treeData={treeData}
+                fieldNames={{
+                    key: 'id'
+                }}
                 titleRender={TitleRender}
             />
         </div>

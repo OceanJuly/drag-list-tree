@@ -4,13 +4,13 @@ function ListItem({tag}: any) {
 
     const [{ isDragging }, drag] = useDrag({
         type: 'item',
+        item: {
+            dragType: 'tag',
+            tagType: 1
+        },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
-        }),
-        end: (item, monitor) => {
-            console.log(item);
-            console.log(monitor);
-        },
+        })
     })
 
     return (
