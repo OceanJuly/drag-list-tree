@@ -4,7 +4,7 @@ import './custom-drag-layout.less'
 import {CSSProperties} from "react";
 
 function CustomDragLayer() {
-    const { itemType, isDragging, initialOffset, currentOffset  } =
+    const { itemType, isDragging, item, initialOffset, currentOffset  } =
         useDragLayer((monitor) => ({
             item: monitor.getItem(),
             itemType: monitor.getItemType(),
@@ -18,9 +18,7 @@ function CustomDragLayer() {
         pointerEvents: 'none',
         zIndex: 100,
         left: 0,
-        top: 0,
-        // width: '100%',
-        // height: '100%',
+        top: 0
     };
 
     function snapToGrid(x: number, y: number): [number, number] {
@@ -54,13 +52,19 @@ function CustomDragLayer() {
         return {
             transform,
             WebkitTransform: transform,
+            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'
         };
     }
 
     function renderItem() {
-        switch (itemType) {
-            case 'item':
-                return <div className="card_drag">这里是预览样式</div>
+        if (!itemType) return null
+        switch (item.dragType) {
+            case 'node': {
+                const text = item.value ? `${item.name}: ${item.value}` : item.name
+                return <div className="card_drag">{text}</div>
+            }
+            case 'tag':
+                return <div className="card_drag">{item.name}</div>
             default:
                 return null;
         }
@@ -71,8 +75,8 @@ function CustomDragLayer() {
     }
 
     return (
-        <div style={layerStyles}>
-            <div className="custom-drag-layout-wrap" style={getItemStyles(initialOffset, currentOffset, true)}>
+        <div style={{...layerStyles}}>
+            <div  className="custom-drag-layout-wrap" style={getItemStyles(initialOffset, currentOffset, true)}>
                 {renderItem()}
             </div>
         </div>

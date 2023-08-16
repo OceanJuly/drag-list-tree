@@ -4,9 +4,10 @@ import { DownOutlined } from '@ant-design/icons';
 import {treeData} from "./const.ts";
 import TreeItem from "./tree-item.tsx";
 import {useState} from "react";
+import { cloneDeep } from "lodash"
 
-function ZfTree(props: any) {
-    const [expandedKeys, setExpandedKeys] = useState(['0-0-0'])
+function ZfTree() {
+    const [expandedKeys, setExpandedKeys] = useState([])
 
     function TitleRender(nodeData: any) {
         return (
@@ -14,13 +15,21 @@ function ZfTree(props: any) {
                 nodeData={nodeData}
                 updateTreeData={updateTreeData}
                 packUpChild={packUpChild}
+                collapseNode={collapseNode}
             ></TreeItem>
         )
     }
 
+    function collapseNode(id: string) {
+        const _expArr = cloneDeep(expandedKeys)
+        const index = _expArr.indexOf(id)
+        index === -1 ? _expArr.push(id) : _expArr.splice(index, 1)
+        setExpandedKeys(_expArr)
+    }
+
     function updateTreeData(tar: any, source: any) {
-        console.log(tar);
-        console.log(source);
+        if (tar.id === source.id) return
+
     }
 
     function packUpChild(key: string) {
@@ -34,7 +43,6 @@ function ZfTree(props: any) {
     return (
         <div className="zf-tree-wrap">
             <Tree
-                showLine
                 blockNode={true}
                 switcherIcon={<DownOutlined />}
                 expandedKeys={expandedKeys}
