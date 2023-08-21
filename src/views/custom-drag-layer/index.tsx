@@ -18,7 +18,9 @@ function CustomDragLayer() {
         pointerEvents: 'none',
         zIndex: 100,
         left: 0,
-        top: 0
+        top: 0,
+        height: '40px',
+        minWidth: '100px'
     };
 
     function snapToGrid(x: number, y: number): [number, number] {
@@ -52,7 +54,8 @@ function CustomDragLayer() {
         return {
             transform,
             WebkitTransform: transform,
-            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'
+            boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+            backgroundColor: item.color
         };
     }
 
@@ -64,7 +67,12 @@ function CustomDragLayer() {
                 return <div className="card_drag">{text}</div>
             }
             case 'tag':
-                return <div className="card_drag">{item.name}</div>
+                return <div className="card_drag">
+                    <div className="card_drag-image">
+                        <span className={`iconfont icon-${item.icon}`} style={{fontSize: '14px'}}></span>
+                    </div>
+                    <div className="card_drag-name">{item.name}</div>
+                </div>
             default:
                 return null;
         }

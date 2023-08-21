@@ -13,7 +13,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       less: {
-        math: 'always'
+        math: 'always',
+        additionalData: `@import "${path.resolve(__dirname, "./src/assets/css/variables.less")}";`
       }
     }
   }

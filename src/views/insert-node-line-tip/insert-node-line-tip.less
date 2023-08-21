@@ -1,0 +1,23 @@
+.insert-node-line-tip-wrap {
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    z-index: 6;
+    width: 100%;
+    .insert-node-line-tip {
+        display: flex;
+        align-items: center;
+        .circle {
+            width: 8px;
+            height: 8px;
+            border: 2px solid @activeColor;
+            border-radius: 50%;
+        }
+        .line {
+            width: calc(100% - 8px);
+            height: 2px;
+            background-color: @activeColor;
+            transform: translateY(25%);
+        }
+    }
+}

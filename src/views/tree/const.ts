@@ -1,6 +1,6 @@
 import type { DataNode } from 'antd/es/tree';
 
-export const treeData: DataNode[] = [
+export const treeData1: DataNode[] = [
     {
         "children": [
             {
@@ -664,4 +664,8 @@ export const treeData: DataNode[] = [
         "key": 789898249693,
         "parentId": null
     }
+]
+
+export const showPreviewBtn = [
+    'image', 'audio', 'video'
 ]

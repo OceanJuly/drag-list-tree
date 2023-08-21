@@ -9,7 +9,7 @@ function ListItem({tag}: any) {
         item: {
             dragType: 'tag',
             tagType: 1,
-            name: tag.name
+            ...tag
         },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
@@ -25,8 +25,11 @@ function ListItem({tag}: any) {
             <div
                 className="tag-item"
                 ref={drag}
-                style={{ opacity: isDragging ? 0.5 : 1 }}>
-                {tag.name}
+                style={{ opacity: isDragging ? 0.5 : 1, backgroundColor: tag.color ? tag.color : '#ccc' }}>
+                <div className="tag-image">
+                    <span className={`iconfont icon-${tag.icon}`} style={{fontSize: '14px'}}></span>
+                </div>
+                <div className="tag-name">{tag.name}</div>
             </div>
         </>
     )

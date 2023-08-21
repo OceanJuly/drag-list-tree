@@ -8,5 +8,46 @@
     padding: 4px 6px;
     border-radius: 5px;
     transition: all ease-in .2s;
+    position: relative;
+    cursor: default;
+    &:hover {
+      &:hover {
+        .right-btn {
+          display: flex;
+        }
+      }
+    }
+    .tree-title-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      .left-input-wrap {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        .warn-tip {
+          border: 2px solid @dangerColor;
+        }
+      }
+      .right-btn {
+        display: none;
+        margin-left: 16px;
+        .iconfont {
+          padding: 6px 8px;
+          cursor: pointer;
+        }
+        .icon-preview {
+          &:hover {
+            color: @activeColor;
+          }
+        }
+        .icon-delete {
+          &:hover {
+            color: @dangerColor;
+          }
+        }
+      }
+    }
   }
 }

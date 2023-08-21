@@ -1,14 +1,19 @@
 import {useDrag, useDrop} from "react-dnd";
-import {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import {Checkbox, Input, InputNumber} from "antd";
+import {debounce} from "lodash";
 import {getEmptyImage} from "react-dnd-html5-backend";
-import {debounce} from 'lodash'
+import InsertNodeLineTip from "@/views/insert-node-line-tip";
+import {isValidUrl} from "../../utils/validate";
+import {showPreviewBtn} from "./const";
 
 function TreeItem(props: any) {
-    const ref = useRef<HTMLDivElement | null>(null)
+    const ref = useRef<HTMLDivElement>(null)
+    const nodeData = props.nodeData
     const firstHoverX = useRef(null)
     const lastHoverX = useRef(null)
-    const nodeData = props.nodeData
-    const deCheckDropPos = debounce(checkDropPos, 300)
+    const updateDebounced = debounce(updateNodeInfo, 500)
+    const [showBtnThreshold, setShowBtnThreshold] = useState(false)
     const [{ isDragging }, drag, preview] = useDrag({
         type: 'item',
         item: {
@@ -31,33 +36,87 @@ function TreeItem(props: any) {
             isOver: monitor.isOver(),
         }),
         drop: (item: any) => {
-            props.updateTreeData(item, nodeData)
+            props.updateTreeData(item, nodeData, !showBtnThreshold)
         },
         hover: (item, monitor) => {
             const { x } = monitor.getDifferenceFromInitialOffset()
             if (firstHoverX.current) lastHoverX.current = x
-            else firstHoverX.current = x
-            console.log(lastHoverX.current - firstHoverX.current);
-            deCheckDropPos(firstHoverX.current, lastHoverX.current)
+            else {
+                firstHoverX.current = x
+            }
+            checkDropPos(firstHoverX.current, lastHoverX.current)
         },
     })
 
     function checkDropPos(originX: number, newX: number) {
         const diff = newX - originX
-        console.log(diff);
+        const showBtnThreshold = 80
+        setShowBtnThreshold(diff > showBtnThreshold)
+    }
+
+    function renderDiffTypeInput() {
+        let {value, type, id} = nodeData
+        type = type ? type : 'string'
+        let dom = null
+        const isEndNode = !['object', 'array'].includes(type)
+        const IllegalUrl = isValidUrl(value)
+        const hasPreBtn = showPreviewBtn.includes(type)
+        switch (type) {
+            case 'number':
+                dom = (
+                    <InputNumber
+                        defaultValue={value}
+                        onChange={(e) => updateDebounced(e, id, 'value')}
+                        style={{width: '100%'}}
+                    />
+                )
+                break
+            case 'boolean':
+                dom = (
+                    <Checkbox style={{lineHeight: '32px', marginLeft: '8px'}}
+                              checked={value} onChange={(e) => updateDebounced(e, id, 'value')}
+                    >Checkbox</Checkbox>
+                )
+                break
+            case 'string':
+            case 'password':
+            case 'image':
+            case 'video':
+            case 'audio':
+            {
+                dom = (
+                    <Input defaultValue={value}
+                           className={!IllegalUrl && hasPreBtn ? 'warn-tip' : ''}
+                           onChange={(e) => updateDebounced(e, id, 'value')}
+                    />
+                )
+                break
+            }
+        }
+        return (
+            <div className="tree-title-item">
+                <div className="left-input-wrap">
+                    <Input style={{width: '140px', marginRight: '8px'}} defaultValue={nodeData.name} onChange={(e) => updateDebounced(e, id, 'name')} />
+                    {isEndNode ? dom : null}
+                </div>
+                <div className="right-btn">
+                    <div onClick={() => props.removeNode(id)}><i className="iconfont icon-delete"></i></div>
+                </div>
+            </div>
+        )
+    }
+
+    function updateNodeInfo(e: any, key: string, attr: string) {
+        props.updateNode(e, key, attr)
     }
 
     return (
         <div
             className="tree-item"
             ref={drag(drop(ref)) as any}
-            onClick={() => props.collapseNode(nodeData.id)}
-            style={{ opacity: isDragging ? 0.5 : 1, background: isOver ? '#ccc' : '#FFFFFF' }}>
-            {
-                nodeData.type === 'String'
-                    ? `${nodeData.name} === ${nodeData.value}`
-                    : nodeData.name
-            }
+            style={{ opacity: isDragging ? 0.5 : 1 }}>
+            {renderDiffTypeInput()}
+            {isOver ? <InsertNodeLineTip showBtnThreshold={showBtnThreshold}></InsertNodeLineTip> : ''}
         </div>
     )
 }

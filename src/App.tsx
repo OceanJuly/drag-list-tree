@@ -4,6 +4,7 @@ import ZfTree from "./views/tree/tree.tsx";
 import {DndProvider } from "react-dnd";
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import CustomDragLayer from "./views/custom-drag-layer";
+import './assets/css/index.less'
 
 function App() {
   return (
