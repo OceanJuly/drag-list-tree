@@ -1,6 +1,6 @@
 # React + TypeScript + Vite
 
-React18 + ts + vite 实现的列表拖拽和树拖拽结合的组件。
+React18 + ts + vite + react-dnd 实现的列表拖拽和树拖拽结合的组件。
 
 # 预览
-![](C:/Users/11713/Pictures/Saved Pictures/preview.gif)
+![previewImage](https://github.com/OceanJuly/drag-list-tree/blob/master/src/assets/images/preview.gif)
